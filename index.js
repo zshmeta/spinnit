@@ -2,5 +2,4 @@ import { spinnit } from './src/main';
 
 
 
-
-spinnit()
+export default spinnit;
