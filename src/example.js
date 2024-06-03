@@ -1,9 +1,9 @@
-import { spinnit } from './main';
+import spinnit from './main';
 import spinnersData from './spinners.json';
 
 const totalSteps = 20;
 const loadingBarInterval = 200;
-const text = 'L o a d i n g . . .  ';
+const text = 'L o a d i n g . . . ';
 const fillingTextInterval = 300;
 const totalSpinners = spinnersData.length;
 const pauseDuration = 5000;
@@ -14,15 +14,15 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function loadingBarExample() {
   console.log('Loading Bar Example:');
-  const loadingBarSpinner = spinnit('Loading Bar');
-  await loadingBarSpinner.setLoadingBar(totalSteps, loadingBarInterval);
+  const loadingBarSpinner = spinnit({ spinner: 'loadingbar', steps: totalSteps, speed: loadingBarInterval });
+  await loadingBarSpinner.start();
   console.log('Loading Bar Complete\n');
 }
 
 async function fillingTextExample() {
   console.log('Filling Text Example:');
-  const fillingTextSpinner = spinnit('Filling Text');
-  await fillingTextSpinner.setFillingText(text, fillingTextInterval);
+  const fillingTextSpinner = spinnit({ spinner: 'loadingtext', speed: fillingTextInterval, text: text });
+  await fillingTextSpinner.start();
   console.log('Filling Text Complete\n');
 }
 
@@ -35,19 +35,23 @@ async function cycleThroughSpinners(waitTime = 0, spinnerIndex = 0, currentSpinn
 
   if (spinnerIndex < totalSpinners) {
     const spinnerData = spinnersData[spinnerIndex];
-    currentSpinner = spinnit(`Spinner ${spinnerIndex + 1} of ${totalSpinners}`);
-    currentSpinner.setSpinnerPattern(spinnerData.spinner).setSpinnerInterval(spinnerData.speed).start();
+    currentSpinner = spinnit({
+      spinner: spinnerData.name,
+      speed: spinnerData.speed,
+      message: `Spinner ${spinnerIndex + 1} of ${totalSpinners}`
+    });
+    currentSpinner.start();
 
     return cycleThroughSpinners(pauseDuration, spinnerIndex + 1, currentSpinner);
   } else {
-    currentSpinner = spinnit('Set the spinner position %s <--');
-    currentSpinner.setSpinnerInterval(slowInterval).start();
+    currentSpinner = spinnit({ spinner: 'loadingtext', speed: slowInterval, text: 'Set the spinner position %s <--' });
+    currentSpinner.start();
 
     await delay(pauseDuration);
     currentSpinner.stop(true);
 
-    currentSpinner = spinnit('Custom spinner with custom speed');
-    currentSpinner.setSpinnerPattern(['|', '/', '-', '\\']).setSpinnerInterval(fastInterval).start();
+    currentSpinner = spinnit({ spinner: 'loadingtext', speed: fastInterval, text: 'Custom spinner with custom speed' });
+    currentSpinner.setSpinnerPattern(['|', '/', '-', '\\']).start();
   }
 }
 

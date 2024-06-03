@@ -13,38 +13,45 @@ const defaultTickHandler = function(message) {
 const spinnit = (options) => {
   const spinner = {};
 
-  if (typeof options === 'string') {
-    options = { message: options };
-  } else if (!options) {
+  if (!options) {
     options = {};
   }
 
   spinner.message = options.message || '';
-  spinner.characters = getSpinnerPattern(defaultSpinnerPattern, spinnersData);
-  spinner.interval = defaultSpinnerInterval;
+  spinner.characters = getSpinnerPattern(options.spinner || defaultSpinnerPattern, spinnersData);
+  spinner.interval = options.speed || defaultSpinnerInterval;
+  spinner.text = options.text || '';
+  spinner.steps = options.steps || 20;
+  spinner.duration = options.duration || 200;
   spinner.onTick = options.onTick || defaultTickHandler;
   spinner.outputStream = options.outputStream || process.stdout;
   spinner.timerId = undefined;
 
-  spinner.start = function() {
+  spinner.start = async function() {
     if (this.outputStream === process.stdout && this.outputStream.isTTY !== true) {
       return this;
     }
 
-    let currentIndex = 0;
-    const self = this;
+    if (this.text) {
+      await this.typeText();
+    } else if (options.spinner === 'loadingbar') {
+      await this.loadingBar();
+    } else {
+      let currentIndex = 0;
+      const self = this;
 
-    const iterate = function() {
-      const msg = self.message.includes('%s')
-        ? self.message.replace('%s', self.characters[currentIndex])
-        : self.characters[currentIndex] + ' ' + self.message;
+      const iterate = function() {
+        const msg = self.message.includes('%s')
+          ? self.message.replace('%s', self.characters[currentIndex])
+          : self.characters[currentIndex] + ' ' + self.message;
 
-      self.onTick(msg);
-      currentIndex = ++currentIndex % self.characters.length;
-    };
+        self.onTick(msg);
+        currentIndex = ++currentIndex % self.characters.length;
+      };
 
-    iterate();
-    this.timerId = setInterval(iterate, this.interval);
+      iterate();
+      this.timerId = setInterval(iterate, this.interval);
+    }
 
     return this;
   };
@@ -89,20 +96,21 @@ const spinnit = (options) => {
     return this;
   };
 
-  spinner.setLoadingBar = async function(totalSteps, interval, character = '=', background = '-') {
-    for (let step = 1; step <= totalSteps; step++) {
-      const bar = character.repeat(step) + background.repeat(totalSteps - step);
-      process.stdout.write(`\r[${bar}] ${Math.round((step / totalSteps) * 100)}%`);
-      await new Promise(resolve => setTimeout(resolve, interval));
+  spinner.typeText = async function() {
+    let filledText = '';
+    for (let i = 0; i < this.text.length; i++) {
+      filledText += this.text[i];
+      process.stdout.write(`\r${this.characters[0]} ${filledText}`);
+      await new Promise(resolve => setTimeout(resolve, this.interval));
     }
     process.stdout.write('\n');
   };
-  spinner.setFillingText = async function(text, interval) {
-    let filledText = '';
-    for (let i = 0; i < text.length; i++) {
-      filledText += text[i];
-      process.stdout.write(`\r${filledText}`);
-      await new Promise(resolve => setTimeout(resolve, interval));
+
+  spinner.loadingBar = async function() {
+    for (let step = 1; step <= this.steps; step++) {
+      const bar = '='.repeat(step) + '-'.repeat(this.steps - step);
+      process.stdout.write(`\r[${bar}] ${Math.round((step / this.steps) * 100)}%`);
+      await new Promise(resolve => setTimeout(resolve, this.interval));
     }
     process.stdout.write('\n');
   };
@@ -145,4 +153,4 @@ const getSpinnerPattern = (value, spinners) => {
   }
 };
 
-export { spinnit };
+export {spinnit};
