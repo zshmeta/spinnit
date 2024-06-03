@@ -153,4 +153,4 @@ const getSpinnerPattern = (value, spinners) => {
   }
 };
 
-export {spinnit};
+export default {spinnit};
