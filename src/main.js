@@ -10,7 +10,7 @@ const defaultTickHandler = function(message) {
   this.outputStream.write(message);
 };
 
-const Spinnit = (options) => {
+const spinnit = (options) => {
   const spinner = {};
 
   if (typeof options === 'string') {
@@ -110,14 +110,14 @@ const Spinnit = (options) => {
   return spinner;
 };
 
-Spinnit.spinners = spinnersData;
+spinnit.spinners = spinnersData;
 
-Spinnit.setDefaultSpinnerPattern = function(value) {
+spinnit.setDefaultSpinnerPattern = function(value) {
   defaultSpinnerPattern = value;
   return this;
 };
 
-Spinnit.setDefaultSpinnerInterval = function(value) {
+spinnit.setDefaultSpinnerInterval = function(value) {
   defaultSpinnerInterval = value;
   return this;
 };
@@ -145,4 +145,4 @@ const getSpinnerPattern = (value, spinners) => {
   }
 };
 
-export { Spinnit };
+export { spinnit };

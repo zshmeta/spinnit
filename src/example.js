@@ -1,4 +1,4 @@
-import { Spinnit } from './main';
+import { spinnit } from './main';
 import spinnersData from './spinners.json';
 
 const totalSteps = 20;
@@ -14,14 +14,14 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 async function loadingBarExample() {
   console.log('Loading Bar Example:');
-  const loadingBarSpinner = Spinnit('Loading Bar');
+  const loadingBarSpinner = spinnit('Loading Bar');
   await loadingBarSpinner.setLoadingBar(totalSteps, loadingBarInterval);
   console.log('Loading Bar Complete\n');
 }
 
 async function fillingTextExample() {
   console.log('Filling Text Example:');
-  const fillingTextSpinner = Spinnit('Filling Text');
+  const fillingTextSpinner = spinnit('Filling Text');
   await fillingTextSpinner.setFillingText(text, fillingTextInterval);
   console.log('Filling Text Complete\n');
 }
@@ -35,18 +35,18 @@ async function cycleThroughSpinners(waitTime = 0, spinnerIndex = 0, currentSpinn
 
   if (spinnerIndex < totalSpinners) {
     const spinnerData = spinnersData[spinnerIndex];
-    currentSpinner = Spinnit(`Spinner ${spinnerIndex + 1} of ${totalSpinners}`);
+    currentSpinner = spinnit(`Spinner ${spinnerIndex + 1} of ${totalSpinners}`);
     currentSpinner.setSpinnerPattern(spinnerData.spinner).setSpinnerInterval(spinnerData.speed).start();
 
     return cycleThroughSpinners(pauseDuration, spinnerIndex + 1, currentSpinner);
   } else {
-    currentSpinner = Spinnit('Set the spinner position %s <--');
+    currentSpinner = spinnit('Set the spinner position %s <--');
     currentSpinner.setSpinnerInterval(slowInterval).start();
 
     await delay(pauseDuration);
     currentSpinner.stop(true);
 
-    currentSpinner = Spinnit('Custom spinner with custom speed');
+    currentSpinner = spinnit('Custom spinner with custom speed');
     currentSpinner.setSpinnerPattern(['|', '/', '-', '\\']).setSpinnerInterval(fastInterval).start();
   }
 }
