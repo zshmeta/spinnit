@@ -10,7 +10,7 @@ const defaultTickHandler = function(message) {
   this.outputStream.write(message);
 };
 
-export const spinnit = (options) => {
+const spinnit = (options) => {
   const spinner = {};
 
   if (!options) {
@@ -152,5 +152,5 @@ const getSpinnerPattern = (value, spinners) => {
     }
   }
 };
-spinnit();
 
+export default spinnit;
