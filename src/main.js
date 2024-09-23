@@ -1,8 +1,9 @@
-#!/usr/bin/env node
-
 import readline from 'readline';
 import chalk from 'chalk';
-import spinnersData from './spinners.json'; // Importing spinners data
+import { createRequire } from 'module'; // Import createRequire
+const require = createRequire(import.meta.url); // Initialize require
+const spinnersData = require('./spinners.json'); // Use require to import JSON
+// import spinnersData from './spinners.json' assert { type: 'json' };// Importing spinners data
 
 let defaultSpinnerPattern = 0;
 let defaultSpinnerInterval = 60;
@@ -12,7 +13,7 @@ const defaultTickHandler = function(message) {
   this.outputStream.write(message);
 };
 
-export async function spinnit (options) {
+export function spinnit (options) {
   const spinner = {};
 
   if (!options) {

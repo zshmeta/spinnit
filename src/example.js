@@ -1,5 +1,8 @@
-import spinnit from './main';
-import spinnersData from './spinners.json';
+import { spinnit } from './main.js';
+import { createRequire } from 'module'; // Import createRequire
+const require = createRequire(import.meta.url); // Initialize require
+const spinnersData = require('./spinners.json'); // Use require to import JSON
+// import spinnersData from './spinners.json' assert { type: 'json' };
 
 const totalSteps = 20;
 const loadingBarInterval = 200;
