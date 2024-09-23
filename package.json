@@ -1,7 +1,13 @@
 {
   "name": "spinnit",
-  "module": "index.js",
+  "module": "./src/main.js",
   "type": "module",
+  "main": "src/main.js",
+  "exports": {
+    ".": {
+      "import": "./src/main.js"
+    }
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
