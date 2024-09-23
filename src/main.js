@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import readline from 'readline';
 import chalk from 'chalk';
 import spinnersData from './spinners.json'; // Importing spinners data
@@ -10,7 +12,7 @@ const defaultTickHandler = function(message) {
   this.outputStream.write(message);
 };
 
-const spinnit = (options) => {
+export async function spinnit (options) {
   const spinner = {};
 
   if (!options) {
@@ -152,5 +154,3 @@ const getSpinnerPattern = (value, spinners) => {
     }
   }
 };
-
-export default spinnit;

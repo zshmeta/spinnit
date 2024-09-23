@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { spinnit } from './src/main';
+import spinnit from './src/main.js';
 
 
 
